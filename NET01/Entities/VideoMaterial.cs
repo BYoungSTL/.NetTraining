@@ -1,32 +1,51 @@
 using System;
+using System.Diagnostics;
 
 namespace NET01.Entities
 {
     public class VideoMaterial : TrainingMaterials, IVersionable
     {
-        private static readonly string[] FormatTypes = {"unknown", "avi", "mp4", "flv"};
-        public string URIVideo { get; set; }
-        public string URIPicture { get; set; }
+        private string _videoFormat;
+        private byte[] _version = new byte[8];
+        public string UriVideo { get; set; }
+        public string UriPicture { get; set; }
         public string VideoFormat
         {
-            get => VideoFormat;
+            get => _videoFormat;
             set
             {
-                bool isInitFormat = false;
-                foreach (var type in FormatTypes)
-                {
-                    if (value.ToLower() == type)
-                    {
-                        VideoFormat = value;
-                        isInitFormat = true;
-                        break;
-                    }
-                }
+                 bool isInitFormat = false;
+                 foreach (var type in Enum.GetNames(typeof(VideoFormatTypes)))
+                 {
+                     if (String.Equals(value, type, StringComparison.CurrentCultureIgnoreCase))
+                     {
+                         _videoFormat = value;
+                         isInitFormat = true;
+                         break;
+                     }
+                 }
 
-                if (!isInitFormat)
-                {
-                    throw new ArgumentException("Invalid Video Format");
-                }
+                 if (!isInitFormat)
+                 {
+                     throw new ArgumentException("Invalid Video Format");
+                 }
+            }
+        }
+   
+        public byte[] GetVersion()
+        {
+            return _version;
+        }
+
+        public void SetVersion(byte[] version)
+        {
+            if (version.Length == _version.Length)
+            {
+                this._version = version;
+            }
+            else
+            {
+                throw new ArgumentException("Invalid version(length mismatch)");
             }
         }
     }

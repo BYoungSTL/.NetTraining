@@ -5,18 +5,19 @@ namespace NET01.Entities
 {
     public abstract class TrainingMaterials : EntityID
     {
+        private string? _description; 
         public string MaterialType { get; set; }
         public string? Description
         {
-            get => Description;
-            set
+            get => this._description;
+            init
             {
-                if (value.Length > 256)
+                if (value != null && value.Length > 256)
                 {
                     throw new ArgumentException("Description is too long! (Max Length = 256)");
                 }
 
-                Description = value;
+                this._description = value;
             }
         }
         
@@ -32,7 +33,7 @@ namespace NET01.Entities
                 return ID == (obj as EntityID)!.ID;
             }
 
-            throw new InvalidCastException("Invalid type for comparison");
+            return false;
         }
     }
 }

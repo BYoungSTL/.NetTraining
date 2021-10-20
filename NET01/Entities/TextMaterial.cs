@@ -2,21 +2,22 @@ using System;
 
 namespace NET01.Entities
 {
-    public class TextMaterial : TrainingMaterials, IVersionable
+    public class TextMaterial : TrainingMaterials
     {
+        private const int TextLength = 10000;
+        private string _text;
         public string Text
         {
-            get => Text;
+            get => _text;
             set
             {
-                if (value.Length > 10000)
+                if (value.Length > TextLength)
                 {
-                    throw new ArgumentException("Text is too long!(Max length = 10000)");
+                    throw new ArgumentException($"Text is too long!(Max length = {TextLength})");
                 }
 
-                Text = value;
+                _text = value;
             }
         }
-
     }
 }

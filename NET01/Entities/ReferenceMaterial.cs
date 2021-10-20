@@ -2,21 +2,21 @@ using System;
 
 namespace NET01.Entities
 {
-    public class ReferenceMaterial : TrainingMaterials, IVersionable
+    public class ReferenceMaterial : TrainingMaterials
     {
-        private static readonly string[] RefTypes = {"unknown", "html", "image", "audio", "video"};
-        public string URIContent { get; set; }
+        private string _referenceType;
+        public string UriContent { get; set; }
         public string ReferenceType
         {
-            get => ReferenceType;
+            get => _referenceType;
             set
             {
                 bool isInitRefType = false;
-                foreach (var type in RefTypes)
+                foreach (var type in Enum.GetNames(typeof(RefTypes)))
                 {
-                    if (value.ToLower() == type)
+                    if (String.Equals(value, type, StringComparison.CurrentCultureIgnoreCase))
                     {
-                        ReferenceType = value;
+                        _referenceType = value;
                         isInitRefType = true;
                         break;
                     }
@@ -29,6 +29,6 @@ namespace NET01.Entities
             }
             
         }
-        
+
     }
 }

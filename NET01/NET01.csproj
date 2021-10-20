@@ -19,6 +19,12 @@
       <Compile Update="Entities\LessonType.cs">
         <DependentUpon>TrainingLesson.cs</DependentUpon>
       </Compile>
+      <Compile Update="Entities\VideoFormatTypes.cs">
+        <DependentUpon>VideoMaterial.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Entities\RefTypes.cs">
+        <DependentUpon>ReferenceMaterial.cs</DependentUpon>
+      </Compile>
     </ItemGroup>
 
 </Project>
