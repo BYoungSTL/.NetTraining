@@ -1,0 +1,16 @@
+D:\RiderProjects\TestSolGit\NET01\NET01_2\bin\Debug\net5.0\NET01_2.exe
+D:\RiderProjects\TestSolGit\NET01\NET01_2\bin\Debug\net5.0\NET01_2.deps.json
+D:\RiderProjects\TestSolGit\NET01\NET01_2\bin\Debug\net5.0\NET01_2.runtimeconfig.json
+D:\RiderProjects\TestSolGit\NET01\NET01_2\bin\Debug\net5.0\NET01_2.runtimeconfig.dev.json
+D:\RiderProjects\TestSolGit\NET01\NET01_2\bin\Debug\net5.0\NET01_2.dll
+D:\RiderProjects\TestSolGit\NET01\NET01_2\bin\Debug\net5.0\ref\NET01_2.dll
+D:\RiderProjects\TestSolGit\NET01\NET01_2\bin\Debug\net5.0\NET01_2.pdb
+D:\RiderProjects\TestSolGit\NET01\NET01_2\obj\Debug\net5.0\NET01_2.csproj.AssemblyReference.cache
+D:\RiderProjects\TestSolGit\NET01\NET01_2\obj\Debug\net5.0\NET01_2.GeneratedMSBuildEditorConfig.editorconfig
+D:\RiderProjects\TestSolGit\NET01\NET01_2\obj\Debug\net5.0\NET01_2.AssemblyInfoInputs.cache
+D:\RiderProjects\TestSolGit\NET01\NET01_2\obj\Debug\net5.0\NET01_2.AssemblyInfo.cs
+D:\RiderProjects\TestSolGit\NET01\NET01_2\obj\Debug\net5.0\NET01_2.csproj.CoreCompileInputs.cache
+D:\RiderProjects\TestSolGit\NET01\NET01_2\obj\Debug\net5.0\NET01_2.dll
+D:\RiderProjects\TestSolGit\NET01\NET01_2\obj\Debug\net5.0\ref\NET01_2.dll
+D:\RiderProjects\TestSolGit\NET01\NET01_2\obj\Debug\net5.0\NET01_2.pdb
+D:\RiderProjects\TestSolGit\NET01\NET01_2\obj\Debug\net5.0\NET01_2.genruntimeconfig.cache
