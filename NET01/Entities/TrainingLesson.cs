@@ -62,12 +62,23 @@ namespace NET01.Entities
 
         public object Clone()
         {
+            byte[] newVersion = new byte[8];
+            for (int i = 0; i < 8; i++)
+            {
+                newVersion[i] = _version[i];
+            }
+
+            TrainingMaterials[] newMaterialsArray = new TrainingMaterials[MaterialsArray.Length];
+            for (int i = 0; i < MaterialsArray.Length; i++)
+            {
+                newMaterialsArray[i] = MaterialsArray[i];
+            }
             TrainingLesson newLesson = new()
             {
                 Name = this.Name,
-                _version = this._version,
+                _version = newVersion,
                 Description = this.Description,
-                MaterialsArray = this.MaterialsArray,
+                MaterialsArray = newMaterialsArray,
                 MaterialType = Enum.GetName(MaterialsTypes()) ?? throw new NullReferenceException("Null material type")
             };
             newLesson.InitGuid();
