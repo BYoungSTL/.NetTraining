@@ -81,7 +81,7 @@ namespace NET01.Entities
 
         public override int GetHashCode()
         {
-            return int.Parse(this.ID.ToString());
+            return int.Parse(ID.ToString());
         }
 
         public override bool Equals(object? obj)
