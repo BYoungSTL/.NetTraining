@@ -25,6 +25,11 @@ namespace NET01.Entities
         {
             return Description;
         }
+        
+        public override int GetHashCode()
+        {
+            return int.Parse(ID.ToString());
+        }
 
         public override bool Equals(object? obj)
         {

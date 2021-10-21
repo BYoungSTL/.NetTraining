@@ -79,6 +79,11 @@ namespace NET01.Entities
             return Description;
         }
 
+        public override int GetHashCode()
+        {
+            return int.Parse(this.ID.ToString());
+        }
+
         public override bool Equals(object? obj)
         {
             if (obj is EntityID)
