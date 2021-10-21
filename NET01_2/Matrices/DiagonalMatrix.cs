@@ -18,11 +18,14 @@ namespace NET01_2.Matrices
             _diagonal = new T[size];
         }
 
+        /* Indexer of Diagonal Matrix:
+           - all elements that are not on the main diagonal (i==j) have a default value
+           - keeps only main diagonal, all other elements doesn't keep */
         public T this[int i, int j]
         {
             get
             {
-                if (i > _size - 1 || j > _size - 1 || i < 0 || j < 0)
+                if (i > _size || j > _size || i < 0 || j < 0)
                 {
                     throw new ArgumentException("Invalid index");
                 }
@@ -36,7 +39,7 @@ namespace NET01_2.Matrices
             }
             set
             {
-                if (i > _size - 1 || j > _size - 1 || i < 0 || j < 0)
+                if (i > _size || j > _size || i < 0 || j < 0)
                 {
                     throw new ArgumentException("Invalid index");
                 }
@@ -49,11 +52,17 @@ namespace NET01_2.Matrices
         }
         
 
+        /* deep clone, "_diagonal = this._diagonal" it is not a deep copy */
         public object Clone()
         {
+            T[] newDiagonal = new T[_size];
+            for (int i = 0; i < _size; i++)
+            {
+                newDiagonal[i] = _diagonal[i];
+            }
             return new DiagonalMatrix<T>(_size)
             {
-                _diagonal = this._diagonal,
+                _diagonal = newDiagonal,
                 _size = this._size
             };
             

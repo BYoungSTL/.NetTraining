@@ -17,12 +17,14 @@ namespace NET01_2.Matrices
             _size = size;
             _matrix = new T[size * size];
         }
-        
+        /* Indexer of Square Matrix:
+             - all matrix keeps as a single array
+             _matrix[_size * j + i] == _matrix[i,j] */
         public T this[int i, int j]
         {
             get
             {
-                if (i > _size - 1 || j > _size - 1 || i < 0 || j < 0)
+                if (i > _size || j > _size || i < 0 || j < 0)
                 {
                     throw new ArgumentException("Invalid index");
                 }
@@ -31,7 +33,7 @@ namespace NET01_2.Matrices
             }
             set
             {
-                if (i > _size - 1 || j > _size - 1 || i < 0 || j < 0)
+                if (i > _size || j > _size || i < 0 || j < 0)
                 {
                     throw new ArgumentException("Invalid index");
                 }
@@ -40,11 +42,17 @@ namespace NET01_2.Matrices
             }
         }
         
+        /* deep clone, "_matrix = this._matrix" it is not a deep copy */
         public object Clone()
         {
+            T[] newMatrix = new T[_size * _size];
+            for (int i = 0; i < _size * _size; i++)
+            {
+                newMatrix[i] = _matrix[i];
+            }
             return new SquareMatrix<T>(_size)
             {
-                _matrix = this._matrix,
+                _matrix = newMatrix,
                 _size = this._size
             };
         }
