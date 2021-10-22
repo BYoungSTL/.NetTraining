@@ -9,7 +9,7 @@ namespace NET01.Entities
         public string MaterialType { get; set; }
         public string? Description
         {
-            get => this._description;
+            get => _description;
             init
             {
                 if (value != null && value.Length > 256)
@@ -17,7 +17,7 @@ namespace NET01.Entities
                     throw new ArgumentException("Description is too long! (Max Length = 256)");
                 }
 
-                this._description = value;
+                _description = value;
             }
         }
         

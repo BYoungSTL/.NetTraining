@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\RiderProjects\\TestSolGit\\NET01\\NET01\\NET01.csproj": {}
+    "D:\\RiderProjects\\NET Tasks\\NET01\\NET1\\NET01\\NET01.csproj": {}
   },
   "projects": {
-    "D:\\RiderProjects\\TestSolGit\\NET01\\NET01\\NET01.csproj": {
+    "D:\\RiderProjects\\NET Tasks\\NET01\\NET1\\NET01\\NET01.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\RiderProjects\\TestSolGit\\NET01\\NET01\\NET01.csproj",
+        "projectUniqueName": "D:\\RiderProjects\\NET Tasks\\NET01\\NET1\\NET01\\NET01.csproj",
         "projectName": "NET01",
-        "projectPath": "D:\\RiderProjects\\TestSolGit\\NET01\\NET01\\NET01.csproj",
+        "projectPath": "D:\\RiderProjects\\NET Tasks\\NET01\\NET1\\NET01\\NET01.csproj",
         "packagesPath": "C:\\Users\\maksimoleynik\\.nuget\\packages\\",
-        "outputPath": "D:\\RiderProjects\\TestSolGit\\NET01\\NET01\\obj\\",
+        "outputPath": "D:\\RiderProjects\\NET Tasks\\NET01\\NET1\\NET01\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\maksimoleynik\\AppData\\Roaming\\NuGet\\NuGet.Config"

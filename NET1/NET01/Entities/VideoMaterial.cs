@@ -1,12 +1,14 @@
 using System;
 using System.Diagnostics;
+using NET01.Interfaces;
 
 namespace NET01.Entities
 {
     public class VideoMaterial : TrainingMaterials, IVersionable
     {
+        private const int VersionSize = 8;
         private string _videoFormat;
-        private byte[] _version = new byte[8];
+        private byte[] _version = new byte[VersionSize];
         public string UriVideo { get; set; }
         public string UriPicture { get; set; }
         public string VideoFormat
@@ -41,7 +43,10 @@ namespace NET01.Entities
         {
             if (version.Length == _version.Length)
             {
-                this._version = version;
+                for (int i = 0; i < version.Length; i++)
+                {
+                    _version[i] = version[i];
+                }
             }
             else
             {

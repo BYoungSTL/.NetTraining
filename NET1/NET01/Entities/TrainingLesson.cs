@@ -1,11 +1,13 @@
 #nullable enable
 using System;
+using NET01.Interfaces;
 
 namespace NET01.Entities
 {
     public class TrainingLesson : EntityID, IVersionable, ICloneable
     {
-        private byte[] _version = new byte[8];
+        private const int VersionSize = 8;
+        private byte[] _version = new byte[VersionSize];
         private const int DescriptionLength = 256;
         private string? _description;
         public TrainingMaterials[] MaterialsArray { get; set; }
@@ -14,7 +16,7 @@ namespace NET01.Entities
 
         public string? Description
         {
-            get => this._description;
+            get => _description;
             set
             {
                 if (value.Length > DescriptionLength)
@@ -22,7 +24,7 @@ namespace NET01.Entities
                     throw new ArgumentException($"Description is too long! (Max Length = {DescriptionLength})");
                 }
 
-                this._description = value;
+                _description = value;
             }
         }
 
@@ -50,7 +52,10 @@ namespace NET01.Entities
         {
             if (version.Length == _version.Length)
             {
-                this._version = version;
+                for (int i = 0; i < version.Length; i++)
+                {
+                    _version[i] = version[i];
+                }
             }
             else
             {
@@ -62,8 +67,8 @@ namespace NET01.Entities
 
         public object Clone()
         {
-            byte[] newVersion = new byte[8];
-            for (int i = 0; i < 8; i++)
+            byte[] newVersion = new byte[VersionSize];
+            for (int i = 0; i < VersionSize; i++)
             {
                 newVersion[i] = _version[i];
             }
