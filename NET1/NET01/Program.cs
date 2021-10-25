@@ -21,11 +21,6 @@ namespace NET01
             {
                 Console.WriteLine(material.MaterialType + " " + material.Description);
             }
-
-            // foreach (var material in newLesson.MaterialsArray)
-            // {
-            //     Console.WriteLine(material.MaterialType + " " + material.Description);
-            // }
             foreach (var v in lesson.GetVersion())
             {
                 Console.Write(v + " ");
