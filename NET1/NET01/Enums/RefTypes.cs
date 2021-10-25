@@ -1,4 +1,4 @@
-namespace NET01.Entities
+namespace NET01.Enums
 {
     public enum RefTypes
     {

@@ -1,20 +1,21 @@
 using System;
+using NET01.Enums;
 
 namespace NET01.Entities
 {
     public class ReferenceMaterial : TrainingMaterials
     {
-        private string _referenceType;
-        public string UriContent { get; set; }
-        public string ReferenceType
+        private readonly RefTypes _referenceType;
+        public string UriContent { get; }
+        public RefTypes ReferenceType
         {
             get => _referenceType;
-            set
+            protected init
             {
                 bool isInitRefType = false;
-                foreach (var type in Enum.GetNames(typeof(RefTypes)))
+                foreach (var type in Enum.GetValues(typeof(RefTypes)))
                 {
-                    if (String.Equals(value, type, StringComparison.CurrentCultureIgnoreCase))
+                    if (value == (RefTypes) type)
                     {
                         _referenceType = value;
                         isInitRefType = true;
@@ -30,5 +31,21 @@ namespace NET01.Entities
             
         }
 
+        public ReferenceMaterial(string uriContent, RefTypes referenceType, string description)
+        {
+            ID = this.InitGuid();
+            UriContent = uriContent;
+            ReferenceType = referenceType;
+            Description = description;
+            MaterialType = MaterialType.Reference;
+        }
+
+        public override ReferenceMaterial Clone()
+        {
+            return new ReferenceMaterial(UriContent, ReferenceType, Description)
+            {
+                ID = this.ID
+            };
+        }
     }
 }

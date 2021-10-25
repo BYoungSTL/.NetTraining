@@ -1,20 +1,18 @@
 #nullable enable
 using System;
+using NET01.Enums;
 using NET01.Interfaces;
 
 namespace NET01.Entities
 {
-    public class TrainingLesson : EntityID, IVersionable, ICloneable
+    public class TrainingLesson : Entity, IVersionable, ICloneable
     {
-        private const int VersionSize = 8;
-        private byte[] _version = new byte[VersionSize];
-        private const int DescriptionLength = 256;
-        private string? _description;
-        public TrainingMaterials[] MaterialsArray { get; set; }
-        public string Name { get; set; }
-        public string MaterialType { get; set; }
+        private byte[] _version = new byte[IVersionable.VersionSize];
+        public TrainingMaterials[] MaterialsArray { get; private set; }
+        public string Name { get; private set; }
+        public MaterialType MaterialType { get; private set; }
 
-        public string? Description
+        private string? Description
         {
             get => _description;
             set
@@ -29,17 +27,17 @@ namespace NET01.Entities
         }
 
         //  Type of Lesson: if one of materials is Video, then the Lesson is Video Lesson
-        public LessonType MaterialsTypes()
+        private MaterialType MaterialsTypes()
         {
             foreach (var material in MaterialsArray)
             {
-                if (material.MaterialType == LessonType.VideoLesson.ToString().Remove(LessonType.VideoLesson.ToString().Length - 6))
+                if (material.MaterialType == MaterialType.Video)
                 {
-                    return LessonType.VideoLesson;
+                    return MaterialType.Video;
                 }
             }
 
-            return LessonType.TextLesson;
+            return MaterialType.Text;
         } 
 
         // IVersionable realization
@@ -52,10 +50,7 @@ namespace NET01.Entities
         {
             if (version.Length == _version.Length)
             {
-                for (int i = 0; i < version.Length; i++)
-                {
-                    _version[i] = version[i];
-                }
+                Array.Copy(_version, version, IVersionable.VersionSize);
             }
             else
             {
@@ -64,19 +59,15 @@ namespace NET01.Entities
         }
 
         // ICloneable realization
-
         public object Clone()
         {
-            byte[] newVersion = new byte[VersionSize];
-            for (int i = 0; i < VersionSize; i++)
-            {
-                newVersion[i] = _version[i];
-            }
+            byte[] newVersion = new byte[IVersionable.VersionSize];
+            Array.Copy(_version, newVersion, IVersionable.VersionSize);
 
             TrainingMaterials[] newMaterialsArray = new TrainingMaterials[MaterialsArray.Length];
             for (int i = 0; i < MaterialsArray.Length; i++)
             {
-                newMaterialsArray[i] = MaterialsArray[i];
+                newMaterialsArray[i] = (MaterialsArray[i].Clone() as TrainingMaterials)!;
             }
             TrainingLesson newLesson = new()
             {
@@ -84,13 +75,52 @@ namespace NET01.Entities
                 _version = newVersion,
                 Description = this.Description,
                 MaterialsArray = newMaterialsArray,
-                MaterialType = Enum.GetName(MaterialsTypes()) ?? throw new NullReferenceException("Null material type")
+                MaterialType = MaterialsTypes(),
+                ID = this.ID
             };
-            newLesson.InitGuid();
             return newLesson;
         }
 
-        public override string ToString()
+        public void InitLesson()
+        {
+            Console.WriteLine("Enter lesson name: ");
+            Name = Console.ReadLine() ?? string.Empty;
+            Console.WriteLine("Enter description: ");
+            Description = Console.ReadLine();
+            MaterialsArray = new TrainingMaterials[]
+            {
+                new VideoMaterial
+                (
+                    "Some picture",
+                    "Some video",
+                    VideoFormatTypes.AVI,
+                    "Some description"
+                ),
+                new TextMaterial
+                (
+                    "Some text",
+                    "Some description"
+                ),
+                new ReferenceMaterial
+                (
+                    "Some Content",
+                    RefTypes.HTML,
+                    null
+                )
+            };
+            ID = this.InitGuid();
+            MaterialType = MaterialsTypes();
+            SetVersion(new byte[]{1, 0, 0, 0, 0, 0, 0, 1});
+            foreach (var trainingMaterials in MaterialsArray)
+            {
+                if (trainingMaterials is VideoMaterial material)
+                {
+                    material.SetVersion(new byte[]{1, 0, 0, 0, 0, 0, 0, 1});
+                }
+            }
+        }
+
+        public override string? ToString()
         {
             return Description;
         }
@@ -102,9 +132,9 @@ namespace NET01.Entities
 
         public override bool Equals(object? obj)
         {
-            if (obj is EntityID)
+            if (obj is Entity)
             {
-                return ID == (obj as EntityID)!.ID;
+                return ID == (obj as Entity)!.ID;
             }
 
             return false;

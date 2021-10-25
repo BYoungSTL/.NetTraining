@@ -1,4 +1,5 @@
 using System;
+using NET01.Enums;
 
 namespace NET01.Entities
 {
@@ -9,7 +10,7 @@ namespace NET01.Entities
         public string Text
         {
             get => _text;
-            set
+            protected init
             {
                 if (value.Length > TextLength)
                 {
@@ -18,6 +19,22 @@ namespace NET01.Entities
 
                 _text = value;
             }
+        }
+
+        public TextMaterial(string text, string description)
+        {
+            ID = this.InitGuid();
+            Description = description;
+            Text = text;
+            MaterialType = MaterialType.Text;
+        }
+
+        public override TextMaterial Clone()
+        {
+            return new TextMaterial(Text, Description)
+            {
+                ID = this.ID
+            };
         }
     }
 }

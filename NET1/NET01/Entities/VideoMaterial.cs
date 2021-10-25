@@ -1,25 +1,25 @@
 using System;
 using System.Diagnostics;
+using NET01.Enums;
 using NET01.Interfaces;
 
 namespace NET01.Entities
 {
     public class VideoMaterial : TrainingMaterials, IVersionable
     {
-        private const int VersionSize = 8;
-        private string _videoFormat;
-        private byte[] _version = new byte[VersionSize];
-        public string UriVideo { get; set; }
-        public string UriPicture { get; set; }
-        public string VideoFormat
+        private VideoFormatTypes _videoFormat;
+        private byte[] _version = new byte[IVersionable.VersionSize];
+        public string UriVideo { get; }
+        public string UriPicture { get; }
+        public VideoFormatTypes VideoFormat
         {
             get => _videoFormat;
-            set
+            protected init
             {
                  bool isInitFormat = false;
-                 foreach (var type in Enum.GetNames(typeof(VideoFormatTypes)))
+                 foreach (var type in Enum.GetValues(typeof(VideoFormatTypes)))
                  {
-                     if (String.Equals(value, type, StringComparison.CurrentCultureIgnoreCase))
+                     if (value == (VideoFormatTypes) type)
                      {
                          _videoFormat = value;
                          isInitFormat = true;
@@ -33,6 +33,16 @@ namespace NET01.Entities
                  }
             }
         }
+
+        public VideoMaterial(string uriVideo, string uriPicture, VideoFormatTypes videoFormat, string description)
+        {
+            ID = this.InitGuid();
+            UriVideo = uriVideo;
+            UriPicture = uriPicture;
+            VideoFormat = videoFormat;
+            Description = description;
+            MaterialType = MaterialType.Video;
+        }
    
         public byte[] GetVersion()
         {
@@ -43,15 +53,22 @@ namespace NET01.Entities
         {
             if (version.Length == _version.Length)
             {
-                for (int i = 0; i < version.Length; i++)
-                {
-                    _version[i] = version[i];
-                }
+                Array.Copy(version, _version, version.Length);
             }
             else
             {
                 throw new ArgumentException("Invalid version(length mismatch)");
             }
+        }
+
+        public override VideoMaterial Clone()
+        {
+            VideoMaterial newVideoMaterial = new VideoMaterial(UriVideo, UriPicture, VideoFormat, Description)
+            {
+                ID = this.ID
+            };
+            newVideoMaterial.SetVersion(GetVersion());
+            return newVideoMaterial;
         }
     }
 }
