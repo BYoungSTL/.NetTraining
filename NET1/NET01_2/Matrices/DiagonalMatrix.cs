@@ -1,84 +1,94 @@
 using System;
+using System.Text;
 
 namespace NET01_2.Matrices
 {
-    public class DiagonalMatrix<T> : ICloneable
+    /// <summary>
+    /// Diagonal matrix:
+    /// all elements that are not on the main diagonal (i==j) have a default value
+    /// keeps only main diagonal, all other elements doesn't keep
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public class DiagonalMatrix<T> : SquareMatrix<T>, ICloneable
     {
-        private T[] _diagonal;
-        private int _size;
-
-        public DiagonalMatrix(int size)
+        //Event for track matrix change
+        private event MatrixHandler Notify;
+        public DiagonalMatrix(int rank) : base(rank)
         {
-            if (size < 0)
+            if (rank < 0)
             {
                 throw new ArgumentException("Invalid size of matrix");
             }
 
-            _size = size;
-            _diagonal = new T[size];
+            this.Rank = rank;
+            this.Matrix = new T[rank];
         }
-
-        /* Indexer of Diagonal Matrix:
-           - all elements that are not on the main diagonal (i==j) have a default value
-           - keeps only main diagonal, all other elements doesn't keep */
-        public T this[int i, int j]
+        
+        public override T this[int i, int j]
         {
             get
             {
-                if (i > _size || j > _size || i < 0 || j < 0)
+                if (i > Rank || j > Rank || i < 0 || j < 0)
                 {
                     throw new ArgumentException("Invalid index");
                 }
 
                 if (i == j)
                 {
-                    return _diagonal[i];
+                    return Matrix[i];
                 }
 
                 return default;
             }
             set
             {
-                if (i > _size || j > _size || i < 0 || j < 0)
+                if (i > Rank || j > Rank || i < 0 || j < 0)
                 {
                     throw new ArgumentException("Invalid index");
                 }
 
                 if (i == j)
                 {
-                    _diagonal[i] = value;
+                    Matrix[i] = value;
                 }
             }
         }
         
 
-        /* deep clone, "_diagonal = this._diagonal" it is not a deep copy */
-        public object Clone()
+        /* deep clone, Matrix[i].Copy() it is the extension method to Generic copying*/
+        public override object Clone()
         {
-            T[] newDiagonal = new T[_size];
-            for (int i = 0; i < _size; i++)
+            T[] newDiagonal = new T[Rank];
+            for (int i = 0; i < Rank; i++)
             {
-                newDiagonal[i] = _diagonal[i];
+                newDiagonal[i] = Matrix[i].Copy();
             }
-            return new DiagonalMatrix<T>(_size)
+            return new DiagonalMatrix<T>(Rank)
             {
-                _diagonal = newDiagonal,
-                _size = this._size
+                Matrix = newDiagonal,
+                Rank = this.Rank
             };
             
         }
-
-        public void Output()
+        
+        public override void MatrixChange(SquareMatrix<T> newDiagonalMatrix)
         {
-            Console.WriteLine("Diagonal Matrix: ");
-            for (int i = 0; i < _size; i++)
+            Notify += Console.WriteLine;
+            for (int i = 0; i < Rank; i++)
             {
-                for (int j = 0; j < _size; j++)
+                for (int j = 0; j < Rank; j++)
                 {
-                    Console.Write(this[i, j]);
+                    if (this[i, j] == null)
+                    {
+                        continue;
+                    }
+                    if (!this[i,j].Equals(newDiagonalMatrix[i,j]))
+                    {
+                        Notify?.Invoke($"Changed: diagonal matrix, {i}, {j}");
+                    }
                 }
-                Console.WriteLine();
             }
         }
+        
     }
 }

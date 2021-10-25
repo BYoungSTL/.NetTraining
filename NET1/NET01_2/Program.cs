@@ -3,16 +3,12 @@ using NET01_2.Matrices;
 
 namespace NET01_2
 {
+    public delegate void MatrixHandler(string message);
     static class Program
     {
-        public delegate void MatrixHandler(string message);
-
-        public static event MatrixHandler Notify;
-
         static void Main(string[] args)
         {
             const string message = "Changed";
-            Notify += Console.WriteLine; //Changes control event: Notification about Changing
             Console.WriteLine("Enter size of matrix");
             int size = int.Parse(Console.ReadLine() ?? string.Empty);
             
@@ -33,9 +29,8 @@ namespace NET01_2
                 }
             }
 
-            squareMatrix.Output();
-            diagonalMatrix.Output();
-            Console.WriteLine();
+            Console.WriteLine("Square: " + squareMatrix.ToString());
+            Console.WriteLine("Diagonal: " + diagonalMatrix.ToString());
 
             //Clone existing matrices for changes control
             SquareMatrix<int> newSquareMatrix = (SquareMatrix<int>) squareMatrix.Clone();
@@ -46,20 +41,14 @@ namespace NET01_2
                 {
                     squareMatrix[i, j] = new Random().Next(101);
                     diagonalMatrix[i, j] = $"{i}, {j + 1}";
-                    if (squareMatrix[i,j] != newSquareMatrix[i, j])
-                    {
-                        Notify?.Invoke(message + $" square matrix, {i}, {j}");
-                    }
-
-                    if (diagonalMatrix[i,j] != newDiagonalMatrix[i, j])
-                    {
-                        Notify?.Invoke(message + $" diagonal matrix, {i}, {j}");
-                    }
                 }
             }
             
-            squareMatrix.Output();
-            diagonalMatrix.Output();
+            squareMatrix.MatrixChange(newSquareMatrix);
+            diagonalMatrix.MatrixChange(newDiagonalMatrix);
+            
+            Console.WriteLine("Square: " + squareMatrix.ToString());
+            Console.WriteLine("Diagonal: " + diagonalMatrix.ToString());
         }
     }
 }

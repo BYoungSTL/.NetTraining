@@ -1,72 +1,105 @@
 using System;
+using System.Text;
 
 namespace NET01_2.Matrices
 {
+    /// <summary>
+    /// Square Matrix
+    /// keeps all elements as opposed to Diagonal Matrix
+    /// Sizes(Rank) of matrices are equal
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class SquareMatrix<T> : ICloneable
     {
-        private int _size;
-        private T[] _matrix;
+        //Event for track matrix change
+        private event MatrixHandler Notify;
+        
+        protected int Rank;
+        protected T[] Matrix;
 
-        public SquareMatrix(int size)
+        public SquareMatrix(int rank)
         {
-            if (size < 0)
+            if (rank < 0)
             {
                 throw new ArgumentException("Invalid size of matrix");
             }
 
-            _size = size;
-            _matrix = new T[size * size];
+            Rank = rank;
+            Matrix = new T[rank * rank];
         }
+
         /* Indexer of Square Matrix:
              - all matrix keeps as a single array
              _matrix[_size * j + i] == _matrix[i,j] */
-        public T this[int i, int j]
+        public virtual T this[int i, int j]
         {
             get
             {
-                if (i > _size || j > _size || i < 0 || j < 0)
+                if (i > Rank || j > Rank || i < 0 || j < 0)
                 {
                     throw new ArgumentException("Invalid index");
                 }
 
-                return _matrix[_size * j + i];
+                return Matrix[Rank * j + i];
             }
             set
             {
-                if (i > _size || j > _size || i < 0 || j < 0)
+                if (i > Rank || j > Rank || i < 0 || j < 0)
                 {
                     throw new ArgumentException("Invalid index");
                 }
 
-                _matrix[_size * j + i] = value;
+                Matrix[Rank * j + i] = value;
             }
         }
         
-        /* deep clone, "_matrix = this._matrix" it is not a deep copy */
-        public object Clone()
+        /* deep clone, Matrix[i].Copy() it is the extension method to Generic copying*/
+        public virtual object Clone()
         {
-            T[] newMatrix = new T[_size * _size];
-            for (int i = 0; i < _size * _size; i++)
+            T[] newMatrix = new T[Rank * Rank];
+            for (int i = 0; i < Rank * Rank; i++)
             {
-                newMatrix[i] = _matrix[i];
+                newMatrix[i] = Matrix[i].Copy();
             }
-            return new SquareMatrix<T>(_size)
+            return new SquareMatrix<T>(Rank)
             {
-                _matrix = newMatrix,
-                _size = this._size
+                Matrix = newMatrix,
+                Rank = Rank
             };
         }
 
-        public void Output()
+        public override string ToString()
         {
-            Console.WriteLine("Square Matrix: ");
-            for (int i = 0; i < _size; i++)
+            StringBuilder matrixString = new StringBuilder("Matrix: \n");
+            for (int i = 0; i < Rank; i++)
             {
-                for (int j = 0; j < _size; j++)
+                for (int j = 0; j < Rank; j++)
                 {
-                    Console.Write(this[i,j] + " ");
+                    matrixString.Append(this[i,j] + " ");
                 }
-                Console.WriteLine();
+
+                matrixString.Append('\n');
+            }
+
+            return matrixString.ToString();
+        }
+
+        public virtual void MatrixChange(SquareMatrix<T> newDiagonalMatrix)
+        {
+            Notify += Console.WriteLine;
+            for (int i = 0; i < Rank; i++)
+            {
+                for (int j = 0; j < Rank; j++)
+                {
+                    if (this[i, j] == null)
+                    {
+                        continue;
+                    }
+                    if (!this[i,j].Equals(newDiagonalMatrix[i,j]))
+                    {
+                        Notify?.Invoke($"Changed: square matrix, {i}, {j}");
+                    }
+                }
             }
         }
     }
