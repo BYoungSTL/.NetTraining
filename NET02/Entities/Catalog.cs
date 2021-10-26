@@ -1,11 +1,16 @@
+using System.Collections;
 using System.Collections.Generic;
 
 namespace NET02.Entities
 {
-    public class Catalog
+    public class Catalog : IEnumerable
     {
-        private string _isbnCode;
-
         public List<Book> Books { get; set; }
+        
+        //IEnumerator returns sorted list of books
+        public IEnumerator GetEnumerator()
+        {
+            yield return new CatalogEnumerator(Books);
+        }
     }
 }
