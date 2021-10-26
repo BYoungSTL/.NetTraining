@@ -4,46 +4,35 @@ namespace NET02.Entities
 {
     public class Author
     {
-        private const int NameLength = 200;
-        private string _firstName;
-        private string _lastName;
-
-        public string FirstName
+        private string _name;
+        private string _secondName;
+        
+        public string Name
         {
-            get => _firstName;
+            get => _name;
             set
             {
-                if (value.Length > NameLength && value != null)
+                if (value.Length > 200)
                 {
-                    throw new ArgumentException("Invalid First name of Author");
+                    throw new ArgumentException("Invalid name of Author");
                 }
 
-                _firstName = value;
+                _name = value;
             }
         }
         
-        public string LastName
+        public string SecondName
         {
-            get => _lastName;
+            get => _secondName;
             set
             {
-                if (value.Length > NameLength)
+                if (value.Length > 200)
                 {
-                    throw new ArgumentException("Invalid Last name of Author");
+                    throw new ArgumentException("Invalid second name of Author");
                 }
 
-                _lastName = value;
+                _secondName = value;
             }
-        }
-
-        public override bool Equals(object? obj)
-        {
-            if (obj == null || obj is not Author)
-            {
-                return false;
-            }
-            Author s = (Author) obj;
-            return FirstName == s.FirstName && LastName == s.LastName;
         }
     }
 }
