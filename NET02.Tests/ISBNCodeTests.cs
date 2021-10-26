@@ -1,0 +1,25 @@
+using NET02.Entities;
+using Xunit;
+using Assert = NUnit.Framework.Assert;
+
+namespace NET02.Tests
+{
+    public class CatalogOperationsTests
+    {
+        [Fact]
+        public void ISBNCode_111_1_11_111111_1__1111111111111returned()
+        {
+            //arrange
+            string expected = "1111111111111";
+            
+            //act
+            Book book = new Book()
+            {
+                ISBNCode = "111-1-11-111111-1",
+            };
+            
+            //assert
+            Assert.AreEqual(expected, book.ISBNCode);
+        }
+    }
+}
