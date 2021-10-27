@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
+using NET02._2.Entities;
 
 namespace NET02._2
 {
@@ -37,7 +38,22 @@ namespace NET02._2
             };
             logins = Serializer.XmlDeserialize();
             Serializer.XmlSerialize(new List<Login>{login1, login2});
-            
+            if (logins != null)
+            {
+                foreach (var login in logins)
+                {
+                    Console.WriteLine($"{login.Name}");
+                    foreach (var window in login.Windows)
+                    {
+                        Console.WriteLine($"Top: {window.Top}\n" +
+                                          $"Bottom: {window.Width}\n" +
+                                          $"Left: {window.Left}\n" +
+                                          $"Right: {window.Height}");
+                    }
+                }
+            }
+
+            Console.WriteLine(logins != null && Serializer.IsLoginCorrect(logins[0]));
         }
     }
 }
