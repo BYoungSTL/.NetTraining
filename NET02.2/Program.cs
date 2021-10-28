@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Xml.Serialization;
 using NET02._2.Entities;
 
@@ -7,7 +8,7 @@ namespace NET02._2
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             List<Login> logins = new List<Login>();
             Window first = new Window
@@ -24,7 +25,15 @@ namespace NET02._2
                 Width = 15,
                 Top = 15,
                 Left = 15,
-                Title = "Title2"
+                Title = "title2"
+            };
+            Window third = new Window
+            {
+                Height = 15,
+                Width = 15,
+                Top = 15,
+                Left = 15,
+                Title = "main"
             };
             Login login1 = new Login()
             {
@@ -34,7 +43,7 @@ namespace NET02._2
             Login login2 = new Login()
             {
                 Name = "Fuf",
-                Windows = new List<Window>{first, second}
+                Windows = new List<Window>{first, third}
             };
             logins = Serializer.XmlDeserialize();
             Serializer.XmlSerialize(new List<Login>{login1, login2});
@@ -42,18 +51,23 @@ namespace NET02._2
             {
                 foreach (var login in logins)
                 {
-                    Console.WriteLine($"{login.Name}");
-                    foreach (var window in login.Windows)
+                    if (!Serializer.IsLoginCorrect(login))
                     {
-                        Console.WriteLine($"Top: {window.Top}\n" +
-                                          $"Bottom: {window.Width}\n" +
-                                          $"Left: {window.Left}\n" +
-                                          $"Right: {window.Height}");
+                        Console.WriteLine($"{login.Name} :false");
+                        foreach (var window in login.Windows)
+                        {
+                            Console.WriteLine($"Title: {window.Title}\nTop: {window.Top} " +
+                                              $"Bottom: {window.Width} " +
+                                              $"Left: {window.Left} " +
+                                              $"Right: {window.Height} ");
+                        }
                     }
                 }
             }
 
-            Console.WriteLine(logins != null && Serializer.IsLoginCorrect(logins[0]));
+            await Serializer.JsonSerialize(new List<Login>{login1, login2});
+            List<Login> jsonLogin = await Serializer.JsonDeserialize();
+            Serializer.XmlSplitting();
         }
     }
 }

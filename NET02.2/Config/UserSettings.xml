@@ -8,7 +8,7 @@
         <left>10</left>
         <height>10</height>
       </Window>
-      <Window Title="Title2">
+      <Window Title="title2">
         <top>15</top>
         <width>15</width>
         <left>15</left>
@@ -24,7 +24,7 @@
         <left>10</left>
         <height>10</height>
       </Window>
-      <Window Title="Title2">
+      <Window Title="main">
         <top>15</top>
         <width>15</width>
         <left>15</left>
