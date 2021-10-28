@@ -13,10 +13,10 @@ namespace NET02.Tests
             string expected = "1111111111111";
             
             //act
-            Book book = new Book("111-1-11-111111-1");
+            string isbnCode = Book.ISBNCodeСoercion("111-1-11-111111-1");
 
             //assert
-            Assert.AreEqual(expected, book.ISBNCode);
+            Assert.AreEqual(expected, isbnCode);
         }
     }
 }

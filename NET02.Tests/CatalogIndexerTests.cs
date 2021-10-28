@@ -10,7 +10,7 @@ namespace NET02.Tests
     public class CatalogIndexerTests
     {
         [Fact]
-        public void Indexer_888_8_88_888888_8_DoomedCiryReturned()
+        public void Indexer_888_8_88_888888_8_DoomedCityReturned()
         {
             Catalog catalog = Program.InitCatalog();
 

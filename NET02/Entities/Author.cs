@@ -8,12 +8,13 @@ namespace NET02.Entities
         private readonly string _firstName;
         private readonly string _lastName;
 
+        private static bool IsCorrectValue(string value) => value.Length > NameLength && !string.IsNullOrEmpty(value); 
         public string FirstName
         {
             get => _firstName;
             private init
             {
-                if (value.Length > NameLength && !string.IsNullOrEmpty(value)) 
+                if (IsCorrectValue(value)) 
                 {
                     throw new ArgumentException("Invalid First name of Author");
                 }
@@ -27,7 +28,7 @@ namespace NET02.Entities
             get => _lastName;
             private init
             {
-                if (value.Length > NameLength && !string.IsNullOrEmpty(value))
+                if (IsCorrectValue(value))
                 {
                     throw new ArgumentException("Invalid Last name of Author");
                 }

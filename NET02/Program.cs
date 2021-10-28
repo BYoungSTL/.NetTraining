@@ -80,8 +80,7 @@ namespace NET02
             IEnumerator orderedBooks = catalog.GetEnumerator();
             while (orderedBooks.MoveNext())
             {
-                Book item = orderedBooks.Current as Book;
-                if (item != null) Console.WriteLine(item.Name);
+                if (orderedBooks.Current is Book item) Console.WriteLine(item.Name);
             }
         }
     }

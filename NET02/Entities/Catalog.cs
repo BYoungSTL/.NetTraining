@@ -9,7 +9,6 @@ namespace NET02.Entities
     {
         public List<Book> Books { get; set; }
         
-        //Fix Enumerator yield!, indexer
         //IEnumerator returns sorted list of books
         public IEnumerator GetEnumerator()
         {
@@ -17,6 +16,12 @@ namespace NET02.Entities
             return books.GetEnumerator();
         }
 
+        /// <summary>
+        /// Indexer:
+        ///     returns book by isbn code
+        ///     if book with given isbn code doesn't exist - return null;
+        /// </summary>
+        /// <param name="isbnCode"></param>
         public Book this[string isbnCode]
         {
             get
@@ -47,8 +52,7 @@ namespace NET02.Entities
         /// <returns></returns>
         public IEnumerable GetAuthorBooks()
         {
-            var s = Books.SelectMany(b => b.Authors);
-            var selected = s.GroupBy(x=>x.FirstName).Select(x => new {Name = x.Key, Count = x.Count()});
+            var selected = Books.SelectMany(b => b.Authors).GroupBy(x=>x.FirstName).Select(x => new {Name = x.Key, Count = x.Count()});
             foreach (var v in selected)
             {
                 Console.WriteLine($"{v.Name} : {v.Count}");
