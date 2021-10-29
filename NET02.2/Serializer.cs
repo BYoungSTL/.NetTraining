@@ -13,11 +13,13 @@ namespace NET02._2
 {
     public static class Serializer
     {
-        private static string xmlFileName =
-            "D:\\RiderProjects\\NET Tasks\\NET02\\NET02\\NET02.2\\Config\\UserSettings.xml";
+        private static string xmlFileName = "D:\\RiderProjects\\NET Tasks\\NET02\\NET02\\NET02.2\\Config\\UserSettings.xml";
+            //"D:\\RiderProjects\\NET Tasks\\NET02\\NET02\\NET02.2\\Config\\UserSettings.xml";
 
         private static string jsonFileName = "D:\\RiderProjects\\NET Tasks\\NET02\\NET02\\NET02.2\\Config\\user.json";
-        private static string splitXmlFilePath = "D:\\RiderProjects\\NET Tasks\\NET02\\NET02\\NET02.2\\Config\\";
+            //"D:\\RiderProjects\\NET Tasks\\NET02\\NET02\\NET02.2\\Config\\user.json";
+        private static string splitXmlFilePath = "D:\\RiderProjects\\NET Tasks\\NET02\\NET02\\NET02.2\\user.json";
+            //"D:\\RiderProjects\\NET Tasks\\NET02\\NET02\\NET02.2\\Config\\";
 
         public static void XmlSerialize(List<Login> logins)
         {
@@ -90,13 +92,34 @@ namespace NET02._2
             string username = doc.Element("Login")?.Value;
             var newDocs = doc.Descendants("Login")
                 .Select(d => new XDocument(d));
-
+            XNamespace defaultNamespace = doc.Root.GetDefaultNamespace();
             int i = 0;
             foreach (var newDoc in newDocs)
             {
+                if (newDoc.Element(defaultNamespace + "top") == null)
+                {
+                    newDoc.Add(new XElement("top", "0"));
+                }
+
+                if (newDoc.Element("left") == null)
+                {
+                    newDoc.Add(new XElement("left", "0"));
+                }
+
+                if (newDoc.Element("width") == null)
+                {
+                    newDoc.Add(new XElement("width", "400"));
+                }
+
+                if (newDoc.Element("height") == null)
+                {
+                    newDoc.Add(new XElement("height", "150"));
+                }
+
                 newDoc.Save(splitXmlFilePath + $"SplitUser{i}.xml");
                 i++;
             }
+            
         }
     }
 }
