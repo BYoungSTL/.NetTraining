@@ -1,21 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
 using NET02._2.Entities;
 
 namespace NET02._2
 {
     class Program
     {
-        static async Task Main(string[] args)
+        static void Main(string[] args)
         {
-            List<Login> logins = new List<Login>();
             Window first = new Window
             {
                 Height = 10,
                 Width = 10,
-                Top = 10,
+                Top = null,
                 Left = 10,
                 Title = "title1"
             };
@@ -45,15 +42,16 @@ namespace NET02._2
                 Name = "Fuf",
                 Windows = new List<Window>{first, third}
             };
+            List<Login> logins = new List<Login> {login1, login2};
+            Serializer.XmlSerialize(logins);
             logins = Serializer.XmlDeserialize();
-            Serializer.XmlSerialize(new List<Login>{login1, login2});
             if (logins != null)
             {
                 foreach (var login in logins)
                 {
                     if (!Serializer.IsLoginCorrect(login))
                     {
-                        Console.WriteLine($"{login.Name} :false");
+                        Console.WriteLine($"{login.Name} : Isn't correct user");
                         foreach (var window in login.Windows)
                         {
                             Console.WriteLine($"Title: {window.Title}\nTop: {window.Top} " +
@@ -65,9 +63,13 @@ namespace NET02._2
                 }
             }
 
-            await Serializer.JsonSerialize(new List<Login>{login1, login2});
-            List<Login> jsonLogin = await Serializer.JsonDeserialize();
             Serializer.XmlSplitting();
+            if (logins != null)
+                foreach (var login in logins)
+                {
+                    Serializer.JsonSerialize(login);
+                }
+            
         }
     }
 }

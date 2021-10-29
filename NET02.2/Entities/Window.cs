@@ -9,13 +9,13 @@ namespace NET02._2.Entities
         [XmlAttribute]
         public string Title { get; set; }
         [XmlElement("top")]
-        public int Top { get; set; }
+        public int? Top { get; set; }
         [XmlElement("width")]
-        public int Width { get; set; }
+        public int? Width { get; set; }
         [XmlElement("left")]
-        public int Left { get; set; }
+        public int? Left { get; set; }
         [XmlElement("height")]
-        public int Height { get; set; }
+        public int? Height { get; set; }
 
         /// <summary>
         /// If all integer properties > 0, this Window is Exist
@@ -23,7 +23,7 @@ namespace NET02._2.Entities
         /// <returns></returns>
         public bool IsExistMainWindow()
         {
-            return Top > 0 && Width > 0 && Left > 0 && Height > 0;
+            return Top != null && Width != null && Left != null && Height != null;
         }
     }
 }
