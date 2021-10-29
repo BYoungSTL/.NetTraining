@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Encodings.Web;
 using System.Text.Json;
-using System.Threading.Tasks;
-using System.Xml;
+using System.Text.Unicode;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using NET02._2.Entities;
@@ -13,18 +13,19 @@ namespace NET02._2
 {
     public static class Serializer
     {
-        private static string xmlFileName = "D:\\RiderProjects\\NET Tasks\\NET02\\NET02\\NET02.2\\Config\\UserSettings.xml";
-            //"D:\\RiderProjects\\NET Tasks\\NET02\\NET02\\NET02.2\\Config\\UserSettings.xml";
+        private static readonly string XmlFileName = Directory.GetCurrentDirectory() + "\\Config\\UserSettings.xml";
 
-        private static string jsonFileName = "D:\\RiderProjects\\NET Tasks\\NET02\\NET02\\NET02.2\\Config\\user.json";
-            //"D:\\RiderProjects\\NET Tasks\\NET02\\NET02\\NET02.2\\Config\\user.json";
-        private static string splitXmlFilePath = "D:\\RiderProjects\\NET Tasks\\NET02\\NET02\\NET02.2\\user.json";
-            //"D:\\RiderProjects\\NET Tasks\\NET02\\NET02\\NET02.2\\Config\\";
+        private static readonly string JsonFilePath = Directory.GetCurrentDirectory() + "\\Config\\";
+        private static readonly string SplitXmlFilePath = Directory.GetCurrentDirectory() + "\\Config\\";
 
+        static Serializer()
+        {
+            Directory.CreateDirectory(Directory.GetCurrentDirectory() + "\\Config");
+        }
         public static void XmlSerialize(List<Login> logins)
         {
             XmlSerializer formatterLogin = new XmlSerializer(typeof(List<Login>));
-            using FileStream fileStream = new FileStream(xmlFileName, FileMode.OpenOrCreate);
+            using FileStream fileStream = new FileStream(XmlFileName, FileMode.OpenOrCreate);
             formatterLogin.Serialize(fileStream, logins);
             Console.WriteLine("Serialize");
         }
@@ -32,8 +33,7 @@ namespace NET02._2
         public static List<Login> XmlDeserialize()
         {
             XmlSerializer formatterLogin = new XmlSerializer(typeof(List<Login>));
-
-            using FileStream fileStream = new FileStream(xmlFileName, FileMode.OpenOrCreate);
+            using FileStream fileStream = new FileStream(XmlFileName, FileMode.OpenOrCreate);
             List<Login> logins = formatterLogin.Deserialize(fileStream) as List<Login>;
             Console.WriteLine("Deserialize");
             return logins;
@@ -64,62 +64,63 @@ namespace NET02._2
 
             return false;
         }
-
-        //need to set up json serializer/deserializer
-        public static async Task<List<Login>> JsonDeserialize()
+        
+        public static Login JsonDeserialize(string fileName)
         {
-            List<Login> login;
-            await using FileStream fileStream = new FileStream(jsonFileName, FileMode.OpenOrCreate);
-            login = await JsonSerializer.DeserializeAsync<List<Login>>(fileStream);
-
+            var jsonString = File.ReadAllText(JsonFilePath + "\\" + fileName + ".json");
+            var login = JsonSerializer.Deserialize<Login>(jsonString);
             return login;
         }
 
-        public static async Task JsonSerialize(List<Login> logins)
+        public static void JsonSerialize(Login login)
         {
-            await using FileStream fileStream = new FileStream(jsonFileName, FileMode.OpenOrCreate);
-            await JsonSerializer.SerializeAsync(fileStream, logins);
+            JsonSerializerOptions options = new JsonSerializerOptions
+            {
+                Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.Cyrillic),
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                WriteIndented = true,
+                IgnoreNullValues = true
+            };
+            
+            string json = JsonSerializer.Serialize(login, options);
+            File.WriteAllText(JsonFilePath + "//" + login.Name + ".json", json);
         }
 
         /// <summary>
         /// Split users from main XML, separate user - separate file
-        ///     ! Need to add default values(top = 0; left = 0; width = 400; height = 150;
-        ///     ! Need to fix file name of split user
+        ///     Name of split XML file: username.xml
+        ///         username from "Name" attribute of "Login" element
+        /// Set default values for null elements: width = 400, height = 150, top and left = 0;
         /// </summary>
         public static void XmlSplitting()
         {
-            XDocument doc = XDocument.Load(xmlFileName);
-            string username = doc.Element("Login")?.Value;
+            XDocument doc = XDocument.Load(XmlFileName);
             var newDocs = doc.Descendants("Login")
                 .Select(d => new XDocument(d));
-            XNamespace defaultNamespace = doc.Root.GetDefaultNamespace();
-            int i = 0;
             foreach (var newDoc in newDocs)
             {
-                if (newDoc.Element(defaultNamespace + "top") == null)
+                var newElement = newDoc.Descendants("Window");
+                foreach (var vElement in newElement)
                 {
-                    newDoc.Add(new XElement("top", "0"));
+                    foreach (var element in Enum.GetNames(typeof(WindowElements)))
+                    {
+                        if (vElement.Element(element)!.IsEmpty)
+                        {
+                            vElement.Element(element)!.RemoveAll();
+                            if (element == Enum.GetName(typeof(WindowElements), 2)) // width = 400;
+                            {
+                                vElement.Element(element)!.Value = "400";
+                            }
+                            if (element == Enum.GetName(typeof(WindowElements), 4)) // height = 150;
+                            {
+                                vElement.Element(element)!.Value = "150";
+                            }
+                            vElement.Element(element)!.Value = "0"; // top = 0, left = 0;
+                        }
+                    }
                 }
-
-                if (newDoc.Element("left") == null)
-                {
-                    newDoc.Add(new XElement("left", "0"));
-                }
-
-                if (newDoc.Element("width") == null)
-                {
-                    newDoc.Add(new XElement("width", "400"));
-                }
-
-                if (newDoc.Element("height") == null)
-                {
-                    newDoc.Add(new XElement("height", "150"));
-                }
-
-                newDoc.Save(splitXmlFilePath + $"SplitUser{i}.xml");
-                i++;
+                newDoc.Save(SplitXmlFilePath + newDoc.Element("Login")!.Attribute("Name")!.Value + ".xml");
             }
-            
         }
     }
 }
